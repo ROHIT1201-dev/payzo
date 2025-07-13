@@ -11,6 +11,10 @@
   "dependencies": {
     "@repo/store": "*",
     "@repo/ui": "*",
+    "@repo/ui/center": "*",
+    "@repo/ui/select": "*",
+    "@repo/ui/textinput": "*",
+    
     "@types/bcrypt": "^5.0.2",
     "bcrypt": "^5.1.1",
     "next": "^14.1.1",

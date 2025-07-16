@@ -31,7 +31,7 @@ export async function p2pTransfer(to: string, amount: number) {
 
         //   console.log("above sleep");
         //   await new Promise((res) => setTimeout(res,4000));
-        //    console.log("after sleep");
+        //    console.log("after sleep");t
           if (!fromBalance || fromBalance.amount < amount) {
             throw new Error('Insufficient funds');
           }

@@ -23,6 +23,9 @@ export const AddMoney = () => {
     SUPPORTED_BANKS[0]?.redirectUrl
   );
 
+
+
+  
   const [amount, setAmount] = useState(0);
   const [provider, setProvider] = useState(SUPPORTED_BANKS[0]?.name || "");
   return (

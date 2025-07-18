@@ -31,3 +31,17 @@ jobs:
 
       - name: Verify pushed image
         run: docker pull rohitraj2510/payzo:latest
+
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            sudo docker pull rohitraj2510/payzo:latest
+            sudo docker stop payzo || true
+            sudo docker rm payzo || true
+            sudo docker run -d --name payzo -p 3005:3000 rohitraj2510/payzo:latest
+
+

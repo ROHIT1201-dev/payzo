@@ -9,7 +9,8 @@
     "./appbar": "./src/Appbar.tsx",
     "./Select": "./src/Select.tsx",
     "./Center": "./src/Center.tsx",
-    "./TextInput": "./src/TextInput.tsx"
+    "./TextInput": "./src/TextInput.tsx",
+    "./Graph":"./src/Graph.tsx"
   },
   "scripts": {
     "lint": "eslint . --max-warnings 0",
@@ -28,6 +29,7 @@
     "typescript": "^5.3.3"
   },
   "dependencies": {
-    "react-dom": "^19.1.0"
+    "react-dom": "^19.1.0",
+    "recharts": "^3.1.0"
   }
 }

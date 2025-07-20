@@ -31,8 +31,9 @@ export default function () {
         Stay inspired. Stay driven.
       </div>
       <main className="w-[53vw]  p-6">
-      <Graph dataRanges={expenseData} />
-    </main>
+        <Graph dataRanges={expenseData} />
+      </main>
+    
     </div>
   );
 }

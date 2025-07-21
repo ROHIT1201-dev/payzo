@@ -10,7 +10,8 @@
     "./Select": "./src/Select.tsx",
     "./Center": "./src/Center.tsx",
     "./TextInput": "./src/TextInput.tsx",
-    "./Graph":"./src/Graph.tsx"
+    "./Graph":"./src/Graph.tsx",
+    "./qrCode":"./src/qrCode.tsx"
   },
   "scripts": {
     "lint": "eslint . --max-warnings 0",

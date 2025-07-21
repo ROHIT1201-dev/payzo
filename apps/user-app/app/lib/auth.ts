@@ -26,7 +26,8 @@ export const authOptions = {
                     return {
                         id: existingUser.id.toString(),
                         name: existingUser.name,
-                        email: existingUser.number
+                        number: existingUser.number
+                        
                     }
                 }
                 return null;
@@ -43,7 +44,7 @@ export const authOptions = {
                 return {
                     id: user.id.toString(),
                     name: user.name,
-                    email: user.number
+                    number: user.number
                 }
             } catch(e) {
                 console.error(e);

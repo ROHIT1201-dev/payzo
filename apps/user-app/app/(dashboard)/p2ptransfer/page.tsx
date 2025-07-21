@@ -88,7 +88,7 @@ export default async function () {
                 return (
                   <div key={index} className="flex justify-between mb-2">
                     <div>
-                      <div className="text-sm">{directionLabel}</div>
+                      <div className="text-sm">{directionLabel  }</div>
                       <div className={`text-xs ${statusColor}`}>
                         {new Date(t.time).toDateString()}
                       </div>

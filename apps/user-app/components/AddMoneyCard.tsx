@@ -53,7 +53,7 @@ export const AddMoney = () => {
             value: x.name,
           }))}
         />
-        <div className="flex justify-center pt-4">
+        <div className="flex justify-center pt-4 ">
           <Button
             onClick={async () => {
               await createOnRampTransaction(amount*100, provider);

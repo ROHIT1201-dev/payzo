@@ -1,9 +1,11 @@
+
 import { Card } from "@repo/ui/card";
-import { SendCard } from "../../../components/SendCard";
+
 
 import { getServerSession } from "next-auth";
 import prisma from "@repo/db/client";
 import { authOptions } from "../../lib/auth";
+import { P2PClientWrapper } from "../../../components/P2PClientWrapper";
 
 async function getP2Ptransactions() {
   const session = await getServerSession(authOptions);
@@ -64,7 +66,7 @@ export default async function () {
 
   return (
     <div className="w-full">
-      <SendCard />
+      <P2PClientWrapper/>
 
       <div className="w-auto">
         <div className="text-4xl text-[#6a51a6] pt-8 mb-8 font-bold">

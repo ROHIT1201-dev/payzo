@@ -1,18 +1,18 @@
-// components/PayzoQRCode.js
+
 "use client";
 import { useQRCode } from "next-qrcode";
-import { Card } from "./card";
 
-export default function qrCode() {
+
+export default function qrCode({value}:any) {
   const { SVG } = useQRCode();
 
   return (
     <div >
       
         <SVG
-          text="upi://pay?pa=yourupiid@bank&pn=Payzo&am=150&cu=INR"
+          text={value}
           options={{
-            errorCorrectionLevel: "H", // High error correction for logo overlays
+            errorCorrectionLevel: "H", 
             margin: 1,
             scale: 1,
             color: {

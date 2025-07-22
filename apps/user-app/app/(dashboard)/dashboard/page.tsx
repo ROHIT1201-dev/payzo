@@ -31,8 +31,8 @@ const expenseData = {
 
 export default async function () {
   const session = await getServerSession(authOptions);
-  const userId = session?.user?.email;
-  console.log(userId);
+  const userId = session?.user?.number;
+  console.log(session?.user);
 
   const upiId = `${userId}@payzo`;
   console.log(upiId);
@@ -61,8 +61,8 @@ export default async function () {
 
         
           <div className="relative inline-block mb-6">
-            <div className="bg-white p-6 rounded-xl border-4 border-transparent bg-gradient-to-r from-white to-white bg-clip-padding border-gradient-to-r from-pink-400 via-teal-300 to-blue-400 shadow-xl animate-pulse h-44 w-44">
-              <QrCode />
+            <div className="bg-white p-4 rounded-xl border-4 border-transparent bg-gradient-to-r from-white to-white bg-clip-padding border-gradient-to-r from-pink-400 via-teal-300 to-blue-400 shadow-xl animate-pulse h-44 w-44">
+              <QrCode value={`http://localhost:3001//p2ptransfer?number=${userId}`} />
             </div>
           </div>
 

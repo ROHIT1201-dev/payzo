@@ -1,11 +1,10 @@
-
 import { Card } from "@repo/ui/card";
-
 
 import { getServerSession } from "next-auth";
 import prisma from "@repo/db/client";
 import { authOptions } from "../../lib/auth";
 import { P2PClientWrapper } from "../../../components/P2PClientWrapper";
+import { Button } from "@repo/ui/button";
 
 async function getP2Ptransactions() {
   const session = await getServerSession(authOptions);
@@ -66,7 +65,27 @@ export default async function () {
 
   return (
     <div className="w-full">
-      <P2PClientWrapper/>
+      <div className="flex flex-1/2 justify-center">
+        <div>
+          <P2PClientWrapper />
+        </div>
+        <div>
+          <div className="h-[43vh] bg-white w-80 mt-3 rounded-lg">
+            <div className="w-full bg-purple-600 h-14 rounded-tr-lg rounded-tl-lg flex justify-center items-center text-2xl font-semibold ">
+             
+              QR Scan
+            </div>
+            <div className="flex justify-center mt-6">
+              <div className="bg-white p-4 rounded-xl border-4 border-transparent bg-gradient-to-r from-white to-white bg-clip-padding border-gradient-to-r from-pink-400 via-teal-300 to-blue-400 shadow-xl animate-pulse h-36 w-36">
+                
+              </div>
+            </div>
+          <div className="pt-4 flex justify-center m-2">
+            <Button >Start Scanning</Button>
+          </div>
+          </div>
+        </div>
+      </div>
 
       <div className="w-auto">
         <div className="text-4xl text-[#6a51a6] pt-8 mb-8 font-bold">
@@ -90,7 +109,7 @@ export default async function () {
                 return (
                   <div key={index} className="flex justify-between mb-2">
                     <div>
-                      <div className="text-sm">{directionLabel  }</div>
+                      <div className="text-sm">{directionLabel}</div>
                       <div className={`text-xs ${statusColor}`}>
                         {new Date(t.time).toDateString()}
                       </div>

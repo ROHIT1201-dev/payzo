@@ -33,7 +33,7 @@ export default function Graph({
   return (
     <div className="bg-white rounded-2xl shadow-md p-6 w-full">
       <div className="text-sm text-gray-500 mb-1">Portfolio value</div>
-      <div className="text-3xl font-bold text-gray-800 mb-6">$0.00</div>
+      <div className="text-3xl font-bold text-gray-800 mb-6">₹0.00</div>
 
       <div className="h-[200px]">
         <ResponsiveContainer width="100%" height="100%">

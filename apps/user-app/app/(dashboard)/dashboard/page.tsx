@@ -6,13 +6,13 @@ import { Card } from "@repo/ui/card";
 
 const expenseData = {
   "1W": [
-    { date: "14 JUL", amount: 0 },
-    { date: "15 JUL", amount: 0 },
-    { date: "16 JUL", amount: 0 },
-    { date: "17 JUL", amount: 0 },
-    { date: "18 JUL", amount: 0 },
-    { date: "19 JUL", amount: 0 },
-    { date: "20 JUL", amount: 0 },
+    { date: "14 JUL", amount: 100},
+    { date: "15 JUL", amount: 110 },
+    { date: "16 JUL", amount: 220 },
+    { date: "17 JUL", amount: 330 },
+    { date: "18 JUL", amount: 120 },
+    { date: "19 JUL", amount: 430 },
+    { date: "20 JUL", amount: 540 },
   ],
   "1M": [
     { date: "20 FEB", amount: 0 },
@@ -44,11 +44,11 @@ export default async function () {
       </div>
 
       <div className="flex gap-6">
-        <main className="bg-white/95 border border-white/30 backdrop-blur-xl shadow-2xl rounded-2xl p-8 w-[53vw]">
+        <main className="bg-white/95 border border-white/30 backdrop-blur-xl shadow-md rounded-2xl p-8 w-[53vw]">
           <Graph dataRanges={expenseData} />
         </main>
 
-        <div className="bg-white/95 border border-white/30 backdrop-blur-xl shadow-2xl rounded-2xl p-8 text-center mr-6">
+        <div className="bg-white/95 border border-white/30 backdrop-blur-xl shadow-md rounded-2xl p-8 text-center mr-6">
         
           <div className="mb-6">
             <h2 className="text-2xl font-semibold text-gray-800 mb-2">

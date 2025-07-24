@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 
-// Rename to avoid name clash
+
 export type TransactionUser = {
   id: number;
   name?: string | null;

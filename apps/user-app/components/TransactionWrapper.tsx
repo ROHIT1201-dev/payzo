@@ -1,7 +1,7 @@
 'use client';
 
 import dynamic from "next/dynamic";
-import { Transaction, TransactionUser } from "@repo/ui/TransactionHistory"; // adjust path if needed
+import { Transaction, TransactionUser } from "@repo/ui/TransactionHistory";
 
 const TransactionHistory = dynamic(
   () =>

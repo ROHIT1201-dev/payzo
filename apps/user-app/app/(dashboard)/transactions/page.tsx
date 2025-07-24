@@ -1,5 +1,5 @@
 import { getServerSession } from "next-auth";
-import { OnRampTransactions } from "../../../components/OnRampTransaction";
+
 import { authOptions } from "../../lib/auth";
 import prisma from "@repo/db/client";
 import { Card } from "@repo/ui/card";

@@ -1,10 +1,18 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback } from "react";
 import dynamic from "next/dynamic";
 import { Button } from "@repo/ui/button";
 import { useRouter } from "next/navigation";
-import { CheckCircle, X, Upload, Camera, AlertCircle, Copy, Check } from "lucide-react";
+import {
+  CheckCircle,
+  X,
+  Upload,
+  Camera,
+  AlertCircle,
+  Copy,
+  Check,
+} from "lucide-react";
 
 const QrImageScanner = dynamic(
   () => import("@repo/ui/QrImageScanner").then((m) => m.QrImageScanner),
@@ -14,7 +22,7 @@ const QrImageScanner = dynamic(
 interface QrResult {
   value: string;
   timestamp: Date;
-  type: 'url' | 'text' | 'phone' | 'email' | 'unknown';
+  type: "url" | "text" | "phone" | "email" | "unknown";
 }
 
 export function QrScanSection() {
@@ -27,44 +35,59 @@ export function QrScanSection() {
   const router = useRouter();
 
   // Detect QR content type
-  const detectQrType = useCallback((value: string): QrResult['type'] => {
-    if (value.startsWith('http://') || value.startsWith('https://')) return 'url';
-    if (value.startsWith('tel:') || /^\+?[\d\s\-\(\)]+$/.test(value)) return 'phone';
-    if (value.includes('@') && value.includes('.')) return 'email';
-    return 'text';
+  const detectQrType = useCallback((value: string): QrResult["type"] => {
+    if (value.startsWith("http://") || value.startsWith("https://"))
+      return "url";
+    if (value.startsWith("tel:") || /^\+?[\d\s\-()]+$/.test(value))
+      return "phone";
+    if (value.includes("@") && value.includes(".")) return "email";
+    return "text";
   }, []);
 
   // Handle QR scan result
-  const handleScanResult = useCallback((value: string) => {
-    try {
-      const result: QrResult = {
-        value: value.trim(),
-        timestamp: new Date(),
-        type: detectQrType(value.trim())
-      };
-      
-      setScannedResult(result);
-      setScanHistory(prev => [result, ...prev.slice(0, 4)]); // Keep last 5 scans
-      setShowScanner(false);
-      setError(null);
-      
-      // Navigate with the scanned value
-      router.push(`?number=${encodeURIComponent(result.value)}`);
-    } catch (err) {
-      setError('Failed to process QR code');
-    }
-  }, [detectQrType, router]);
+  const handleScanResult = useCallback(
+    (value: string) => {
+      try {
+        // Handle error cases
+        if (!value || value.trim().length === 0) {
+          setError("Invalid QR code - no data found");
+          setShowScanner(false);
+          setIsScanning(false);
+          return;
+        }
+
+        const result: QrResult = {
+          value: value.trim(),
+          timestamp: new Date(),
+          type: detectQrType(value.trim()),
+        };
+
+        setScannedResult(result);
+        setScanHistory((prev) => [result, ...prev.slice(0, 4)]); // Keep last 5 scans
+        setShowScanner(false);
+        setError(null);
+
+        // Navigate with the scanned value
+        router.push(`?number=${encodeURIComponent(result.value)}`);
+      } catch (err) {
+        setError("Failed to process QR code");
+        setShowScanner(false);
+        setIsScanning(false);
+      }
+    },
+    [detectQrType, router]
+  );
 
   // Copy to clipboard
   const copyToClipboard = useCallback(async () => {
     if (!scannedResult) return;
-    
+
     try {
       await navigator.clipboard.writeText(scannedResult.value);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
-      setError('Failed to copy to clipboard');
+      setError("Failed to copy to clipboard");
     }
   }, [scannedResult]);
 
@@ -78,36 +101,38 @@ export function QrScanSection() {
   // Get display text based on QR type
   const getDisplayText = useCallback((result: QrResult) => {
     switch (result.type) {
-      case 'url':
-        return result.value.length > 50 ? `${result.value.substring(0, 47)}...` : result.value;
-      case 'phone':
-        return result.value.replace('tel:', '');
+      case "url":
+        return result.value.length > 50
+          ? `${result.value.substring(0, 47)}...`
+          : result.value;
+      case "phone":
+        return result.value.replace("tel:", "");
       default:
-        return result.value.length > 60 ? `${result.value.substring(0, 57)}...` : result.value;
+        return result.value.length > 60
+          ? `${result.value.substring(0, 57)}...`
+          : result.value;
     }
   }, []);
 
   // Get icon based on QR type
-  const getTypeIcon = useCallback((type: QrResult['type']) => {
+  const getTypeIcon = useCallback((type: QrResult["type"]) => {
     switch (type) {
-      case 'url': return '🌐';
-      case 'phone': return '📞';
-      case 'email': return '📧';
-      default: return '📄';
+      case "url":
+        return "🌐";
+      case "phone":
+        return "📞";
+      case "email":
+        return "📧";
+      default:
+        return "📄";
     }
   }, []);
 
   // Dynamic class helpers
   const getGradientClass = () => {
-    return scannedResult 
-      ? "bg-gradient-to-r from-green-400 via-emerald-300 to-teal-400" 
+    return scannedResult
+      ? "bg-gradient-to-r from-green-400 via-emerald-300 to-teal-400"
       : "bg-gradient-to-r from-gray-300 via-gray-200 to-gray-300";
-  };
-
-  const getButtonClass = () => {
-    return `flex-1 py-2.5 font-semibold transition-all duration-200 ${
-      isScanning ? "opacity-50 cursor-not-allowed" : ""
-    }`;
   };
 
   return (
@@ -128,7 +153,9 @@ export function QrScanSection() {
 
       <div className="flex flex-col items-center px-6 py-6 gap-4">
         {/* QR Display Area */}
-        <div className={`rounded-xl p-1 shadow-md transition-all duration-300 ${getGradientClass()}`}>
+        <div
+          className={`rounded-xl p-1 shadow-md transition-all duration-300 ${getGradientClass()}`}
+        >
           <div className="bg-white h-40 w-40 flex flex-col items-center justify-center rounded-lg p-3">
             {error ? (
               <div className="text-center">
@@ -163,24 +190,24 @@ export function QrScanSection() {
         {/* Action Buttons */}
         <div className="flex gap-2 w-full">
           <Button
-            className={getButtonClass()}
             onClick={() => {
               setShowScanner(true);
               setIsScanning(true);
               setError(null);
             }}
             disabled={isScanning}
-            variant="default"
+            variant={isScanning ? "ghost" : "default"}
+            className="flex-1"
           >
             <Camera className="w-4 h-4 mr-2" />
-            {scannedResult ? "Rescan" : "Scan QR"}
+            {scannedResult ? "Rescan" : isScanning ? "Scanning..." : "Scan QR"}
           </Button>
-          
+
           {scannedResult && (
             <>
               <Button 
                 variant="outline" 
-                size="sm"
+                size="sm" 
                 onClick={copyToClipboard}
                 className="px-3"
               >
@@ -198,7 +225,7 @@ export function QrScanSection() {
           )}
         </div>
 
-        {/* Scanner Component */}
+        {/* Scanner Component - FIXED */}
         {showScanner && (
           <div className="mt-2 w-full bg-gray-50 rounded-lg p-3">
             <QrImageScanner
@@ -207,11 +234,6 @@ export function QrScanSection() {
                 setIsScanning(false);
               }}
               onClose={() => {
-                setShowScanner(false);
-                setIsScanning(false);
-              }}
-              onError={(err: string) => {
-                setError(err);
                 setShowScanner(false);
                 setIsScanning(false);
               }}
@@ -231,7 +253,9 @@ export function QrScanSection() {
         {/* Recent Scans History */}
         {scanHistory.length > 1 && (
           <div className="w-full mt-2">
-            <h4 className="text-sm font-semibold text-gray-600 mb-2">Recent Scans</h4>
+            <h4 className="text-sm font-semibold text-gray-600 mb-2">
+              Recent Scans
+            </h4>
             <div className="space-y-1 max-h-32 overflow-y-auto">
               {scanHistory.slice(1, 4).map((scan, index) => (
                 <button
@@ -241,7 +265,9 @@ export function QrScanSection() {
                 >
                   <div className="flex items-center gap-2">
                     <span>{getTypeIcon(scan.type)}</span>
-                    <span className="truncate flex-1">{getDisplayText(scan)}</span>
+                    <span className="truncate flex-1">
+                      {getDisplayText(scan)}
+                    </span>
                   </div>
                 </button>
               ))}
@@ -252,3 +278,4 @@ export function QrScanSection() {
     </div>
   );
 }
+  

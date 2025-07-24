@@ -1,4 +1,4 @@
-import { Card } from "@repo/ui/card";
+
 import { getServerSession } from "next-auth";
 import prisma from "@repo/db/client";
 import { authOptions } from "../../lib/auth";
@@ -6,7 +6,7 @@ import { P2PClientWrapper } from "../../../components/P2PClientWrapper";
 import { QrScanSection } from "../../../components/QrScanSection";
 import { TransactionWrapper } from "../../../components/TransactionWrapper";
 
-import dynamic from "next/dynamic";
+
 import {
   Activity,
   Send,
@@ -16,7 +16,7 @@ import {
   Clock,
 } from "lucide-react";
 
-// This disables SSR for TransactionHistory:
+
 
 async function getP2Ptransactions() {
   const session = await getServerSession(authOptions);
@@ -55,7 +55,7 @@ async function getP2Ptransactions() {
     sessionUserId: userId,
     transactions: txns.map((t) => ({
       amount: t.amount,
-      time: t.timeStamp,
+      time: t.timeStamp.toISOString(),
       fromUserId: t.fromUserId,
       toUserId: t.toUserId,
       fromUser: {
@@ -75,7 +75,7 @@ async function getP2Ptransactions() {
 export default async function P2PTransferPage() {
   const { transactions, sessionUserId } = await getP2Ptransactions();
 
-  // Calculate summary stats
+  
   const totalSent = transactions
     .filter((t) => t.fromUserId === sessionUserId)
     .reduce((sum, t) => sum + t.amount, 0);
@@ -86,7 +86,7 @@ export default async function P2PTransferPage() {
 
   return (
     <div className="w-screen">
-      {/* Header */}
+     
       <div className="shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-6 py-8">
           <div className="flex items-center justify-between">
@@ -113,9 +113,9 @@ export default async function P2PTransferPage() {
       </div>
 
       <div className="max-w-7xl mx-auto px-6 py-8 space-y-8">
-        {/* Transfer Section */}
+        
         <div className="grid lg:grid-cols-2 gap-8">
-          {/* Send Money */}
+       
           <div>
             <div className="bg-white rounded-2xl shadow-lg border border-gray-200/50 overflow-hidden group hover:shadow-xl transition-all duration-500">
               <div className="bg-gradient-to-r from-[#6a51a6] to-[#8b5cf6] p-6">
@@ -143,7 +143,7 @@ export default async function P2PTransferPage() {
             </div>
           </div>
 
-          {/* QR Scanner */}
+        
           <div>
             <div className="bg-white rounded-2xl shadow-lg border border-gray-200/50 overflow-hidden group hover:shadow-xl transition-all duration-500">
               <div className="bg-gradient-to-r from-[#6a51a6] to-[#8b5cf6] p-6">
@@ -172,7 +172,7 @@ export default async function P2PTransferPage() {
           </div>
         </div>
 
-        {/* Stats Dashboard */}
+        
         {transactions.length > 0 && (
           <div>
             <div className="mb-6">
@@ -184,7 +184,7 @@ export default async function P2PTransferPage() {
               </p>
             </div>
             <div className="grid md:grid-cols-3 gap-6">
-              {/* Total Sent */}
+           
               <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-200/50 hover:shadow-xl transition-all duration-300 group">
                 <div className="flex items-center justify-between mb-4">
                   <div className="w-12 h-12 bg-red-50 rounded-xl flex items-center justify-center group-hover:bg-red-100 transition-colors">
@@ -205,7 +205,7 @@ export default async function P2PTransferPage() {
                 <p className="text-xs text-gray-500 mt-2">Outgoing transfers</p>
               </div>
 
-              {/* Total Received */}
+             
               <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-200/50 hover:shadow-xl transition-all duration-300 group">
                 <div className="flex items-center justify-between mb-4">
                   <div className="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center group-hover:bg-green-100 transition-colors">
@@ -226,7 +226,7 @@ export default async function P2PTransferPage() {
                 <p className="text-xs text-gray-500 mt-2">Incoming transfers</p>
               </div>
 
-              {/* Total Transactions */}
+             
               <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-200/50 hover:shadow-xl transition-all duration-300 group">
                 <div className="flex items-center justify-between mb-4">
                   <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center group-hover:bg-blue-100 transition-colors">
@@ -250,7 +250,7 @@ export default async function P2PTransferPage() {
           </div>
         )}
 
-        {/* Transaction History */}
+        
         <div>
           <div className="flex items-center justify-between mb-6">
             <div>

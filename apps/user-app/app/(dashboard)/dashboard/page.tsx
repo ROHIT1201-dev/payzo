@@ -3,7 +3,7 @@ import Graph from "@repo/ui/Graph";
 import QrCode from "@repo/ui/qrCode";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../lib/auth";
-import { Card } from "@repo/ui/card";
+
 
 
 

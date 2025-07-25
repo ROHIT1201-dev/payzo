@@ -26,7 +26,8 @@ type GraphProps = {
 };
 
 const Graph = ({ userId }: GraphProps) => {
-  const { dataByRange, loading } = useAllGraphRanges(userId);
+  const { dataByRange, loading, totalReceived, totalSent } =
+    useAllGraphRanges(userId);
   const ranges = ["1W", "1M", "3M", "6M", "1Y", "ALL"];
   const [selectedRange, setSelectedRange] = useState("1M");
   const [graphData, setGraphData] = useState<ExpensePoint[]>([]);
@@ -42,7 +43,20 @@ const Graph = ({ userId }: GraphProps) => {
   return (
     <div className="p-4 rounded-lg border bg-white shadow-md">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-lg font-semibold">Spending Trend</h2>
+        <div className="flex gap-10">
+          <div>
+            <div className="text-sm text-gray-500 mb-1">Portfolio credited</div>
+            <div className="text-3xl font-bold text-gray-800 mb-6">
+              ₹{totalReceived / 100}.00
+            </div>
+          </div>
+          <div>
+            <div className="text-sm text-gray-500 mb-1">Portfolio debited</div>
+            <div className="text-3xl font-bold text-gray-800 mb-6">
+              ₹{totalSent / 100}.00
+            </div>
+          </div>
+        </div>
         <select
           className="border rounded px-2 py-1 text-sm"
           value={selectedRange}

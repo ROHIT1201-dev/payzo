@@ -47,7 +47,7 @@ export async function p2pTransfer(to: string, amount: number) {
       update: { amount: { increment: amount } },
       create: {
         userId: toUser.id,
-        amount: amount, // or starting from 0 + amount
+        amount: amount,
         locked:0,
       },
     });

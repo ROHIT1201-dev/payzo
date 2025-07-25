@@ -6,32 +6,6 @@ import { authOptions } from "../../lib/auth";
 
 
 
-
-const expenseData = {
-  "1W": [
-    { date: "14 JUL", amount: 100},
-    { date: "15 JUL", amount: 110 },
-    { date: "16 JUL", amount: 220 },
-    { date: "17 JUL", amount: 330 },
-    { date: "18 JUL", amount: 120 },
-    { date: "19 JUL", amount: 430 },
-    { date: "20 JUL", amount: 540 },
-  ],
-  "1M": [
-    { date: "20 FEB", amount: 0 },
-    { date: "28 FEB", amount: 0 },
-    { date: "7 MAR", amount: 0 },
-    { date: "15 MAR", amount: 0 },
-    { date: "23 MAR", amount: 0 },
-  ],
-  "3M": [
-    { date: "Jan", amount: 0 },
-    { date: "Feb", amount: 0 },
-    { date: "Mar", amount: 0 },
-  ],
-  // Add 6M, 1Y, ALL ranges
-};
-
 export default async function () {
   const session = await getServerSession(authOptions);
   const userNumber = session?.user?.number;
@@ -41,7 +15,7 @@ export default async function () {
 
   const upiId = `${userNumber}@payzo`;
   console.log(upiId);
-  // NEW: Manage scanned value and whether scanner shows
+  
 
 
   return (

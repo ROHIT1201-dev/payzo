@@ -23,7 +23,11 @@ function formatLabel(date: Date, range: string): string {
 }
 
 export function useAllGraphRanges(userId: number) {
-  const [dataByRange, setDataByRange] = useState<{ [range: string]: ExpensePoint[] }>({});
+  const [dataByRange, setDataByRange] = useState<{
+    [range: string]: ExpensePoint[];
+  }>({});
+  const [totalReceived, setTotalReceived] = useState(0);
+  const [totalSent, setTotalSent] = useState(0);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -31,21 +35,23 @@ export function useAllGraphRanges(userId: number) {
       try {
         setLoading(true);
 
-        // ✅ Fetch from correct endpoint
         const res = await fetch(`/api/graph-data`);
-        const { data } = await res.json(); // ✅ data instead of user
+        const { data, totalReceived, totalSent } = await res.json();
+
+        setTotalReceived(totalReceived);
+        setTotalSent(totalSent);
 
         const transactions: RawTxn[] = data || [];
 
         const now = new Date();
 
-        const grouped: { [range: string]: Record<string, number> } = {
+        const grouped: { [range: string]: any } = {
           "1W": {},
           "1M": {},
           "3M": {},
           "6M": {},
           "1Y": {},
-          "ALL": {},
+          ALL: {},
         };
 
         for (const t of transactions) {
@@ -54,21 +60,25 @@ export function useAllGraphRanges(userId: number) {
           for (const [range, days] of Object.entries(ranges)) {
             if (differenceInDays(now, time) <= days) {
               const label = formatLabel(time, range);
-              grouped[range][label] = (grouped[range][label] || 0) + t.amount/100;
+              grouped[range][label] =
+                (grouped[range][label] || 0) + t.amount / 100;
             }
           }
 
-          // Always include in ALL
+        
           const labelAll = formatLabel(time, "ALL");
-          grouped["ALL"][labelAll] = (grouped["ALL"][labelAll] || 0) + t.amount/100;
+          grouped["ALL"][labelAll] =
+            (grouped["ALL"][labelAll] || 0) + t.amount / 100;
         }
 
         const final: { [range: string]: ExpensePoint[] } = {};
         for (const range of Object.keys(grouped)) {
-          final[range] = Object.entries(grouped[range]).map(([date, amount]) => ({
-            date,
-            amount,
-          }));
+          final[range] = Object.entries(grouped[range] ?? {}).map(
+            ([date, amount]) => ({
+              date,
+              amount: amount as number,
+            })
+          );
         }
 
         setDataByRange(final);
@@ -84,5 +94,5 @@ export function useAllGraphRanges(userId: number) {
     }
   }, [userId]);
 
-  return { dataByRange, loading };
+  return { dataByRange, loading, totalReceived, totalSent };
 }

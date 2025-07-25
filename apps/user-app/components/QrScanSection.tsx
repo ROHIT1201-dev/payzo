@@ -98,7 +98,7 @@ export function QrScanSection() {
     setCopied(false);
   }, []);
 
-  // Get display text based on QR type
+  
   const getDisplayText = useCallback((result: QrResult) => {
     switch (result.type) {
       case "url":
@@ -114,7 +114,7 @@ export function QrScanSection() {
     }
   }, []);
 
-  // Get icon based on QR type
+
   const getTypeIcon = useCallback((type: QrResult["type"]) => {
     switch (type) {
       case "url":
@@ -128,7 +128,7 @@ export function QrScanSection() {
     }
   }, []);
 
-  // Dynamic class helpers
+
   const getGradientClass = () => {
     return scannedResult
       ? "bg-gradient-to-r from-green-400 via-emerald-300 to-teal-400"
@@ -137,7 +137,7 @@ export function QrScanSection() {
 
   return (
     <div className="h-auto bg-white w-80 mt-3 rounded-xl shadow-lg overflow-hidden border border-gray-100">
-      {/* Header */}
+     
       <div className="w-full bg-gradient-to-r from-purple-600 to-purple-700 h-16 flex justify-center items-center text-2xl font-bold text-white relative">
         <Camera className="w-6 h-6 mr-2" />
         QR Scanner
@@ -152,7 +152,7 @@ export function QrScanSection() {
       </div>
 
       <div className="flex flex-col items-center px-6 py-6 gap-4">
-        {/* QR Display Area */}
+       
         <div
           className={`rounded-xl p-1 shadow-md transition-all duration-300 ${getGradientClass()}`}
         >
@@ -278,4 +278,3 @@ export function QrScanSection() {
     </div>
   );
 }
-  

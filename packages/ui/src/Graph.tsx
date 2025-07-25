@@ -1,117 +1,89 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import {
-  LineChart,
-  Line,
+  AreaChart,
+  Area,
   XAxis,
   YAxis,
   Tooltip,
   ResponsiveContainer,
+  CartesianGrid,
 } from "recharts";
-import { useState } from "react";
+
+import { useAllGraphRanges } from "../../../apps/user-app/app/lib/hooks/useAllGraph";
 
 type ExpensePoint = {
   date: string;
   amount: number;
 };
 
-type Props = {
-  dataRanges: { [range: string]: ExpensePoint[] };
-  selectedColor?: string;
+type GraphProps = {
+  dataRanges?: {
+    [range: string]: ExpensePoint[];
+  };
+  userId: number;
 };
 
-const rangeOptions = ["1W", "1M", "3M", "6M", "1Y", "ALL"];
-
-export default function Graph({
-  dataRanges,
-  selectedColor = "#7E3AF2",
-}: Props) {
+const Graph = ({ userId }: GraphProps) => {
+  const { dataByRange, loading } = useAllGraphRanges(userId);
+  const ranges = ["1W", "1M", "3M", "6M", "1Y", "ALL"];
   const [selectedRange, setSelectedRange] = useState("1M");
+  const [graphData, setGraphData] = useState<ExpensePoint[]>([]);
 
-  const data = dataRanges[selectedRange] || [];
+  useEffect(() => {
+    if (dataByRange && dataByRange[selectedRange]) {
+      setGraphData(dataByRange[selectedRange]);
+    } else {
+      setGraphData([]);
+    }
+  }, [dataByRange, selectedRange]);
 
   return (
-    <div className="bg-white rounded-2xl shadow-md p-6 w-full">
-      <div className="text-sm text-gray-500 mb-1">Portfolio value</div>
-      <div className="text-3xl font-bold text-gray-800 mb-6">₹0.00</div>
-
-      <div className="h-[200px]">
-        <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={data}>
-            <XAxis dataKey="date" tick={{ fontSize: 12 }} />
-            <YAxis
-              tickFormatter={(val) => `$${val.toFixed(2)}`}
-              domain={["dataMin", "dataMax"]}
-              tick={{ fontSize: 12 }}
-            />
-            <Tooltip formatter={(val) => `$${val}`} />
-            <Line
+    <div className="p-4 rounded-lg border bg-white shadow-md">
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-lg font-semibold">Spending Trend</h2>
+        <select
+          className="border rounded px-2 py-1 text-sm"
+          value={selectedRange}
+          onChange={(e) => setSelectedRange(e.target.value)}
+        >
+          {ranges.map((range) => (
+            <option key={range} value={range}>
+              {range}
+            </option>
+          ))}
+        </select>
+      </div>
+      {graphData.length > 0 ? (
+        <ResponsiveContainer width="100%" height={300}>
+          <AreaChart data={graphData}>
+            <defs>
+              <linearGradient id="colorAmount" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="#34d399" stopOpacity={0.8} />
+                <stop offset="95%" stopColor="#34d399" stopOpacity={0} />
+              </linearGradient>
+            </defs>
+            <XAxis dataKey="date" />
+            <YAxis />
+            <Tooltip />
+            <CartesianGrid strokeDasharray="3 3" />
+            <Area
               type="monotone"
               dataKey="amount"
-              stroke={selectedColor}
-              strokeWidth={2}
-              dot={false}
+              stroke="#34d399"
+              fillOpacity={1}
+              fill="url(#colorAmount)"
             />
-          </LineChart>
+          </AreaChart>
         </ResponsiveContainer>
-      </div>
-
-      <div className="flex justify-center gap-2 mt-6">
-        {rangeOptions.map((range) => (
-          <button
-            key={range}
-            onClick={() => setSelectedRange(range)}
-            className={`px-3 py-1 mx-2 rounded-full text-sm transition ${
-              selectedRange === range
-                ? "bg-gray-900 text-white"
-                : "bg-gray-100 text-gray-700"
-            }`}
-          >
-            {range}
-          </button>
-        ))}
-      </div>
-
-      <div className="flex gap-4 mt-4 justify-center">
-        <div>
-          <div className="bg-purple-200 p-3 rounded-full h-12 w-12 text-[#7E3AF2]">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth="1.5"
-              stroke="currentColor"
-              className="size-6 "
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M2.25 6 9 12.75l4.286-4.286a11.948 11.948 0 0 1 4.306 6.43l.776 2.898m0 0 3.182-5.511m-3.182 5.51-5.511-3.181"
-              />
-            </svg>
-          </div>
-          <span className="text-[#7E3AF2] mr-1">Debit</span>
-        </div>
-        <div>
-          <div className="bg-purple-200 p-3 rounded-full h-12 w-12 text-[#7E3AF2]">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth="1.5"
-              stroke="currentColor"
-              className="size-6"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M2.25 18 9 11.25l4.306 4.306a11.95 11.95 0 0 1 5.814-5.518l2.74-1.22m0 0-5.94-2.281m5.94 2.28-2.28 5.941"
-              />
-            </svg>
-          </div>
-            <span className="text-[#7E3AF2] mr-1">Credit</span>
-        </div>
-      </div>
+      ) : (
+        <p className="text-sm text-gray-500">
+          No data available for selected range.
+        </p>
+      )}
     </div>
   );
-}
+};
+
+export default Graph;

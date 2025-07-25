@@ -1,8 +1,12 @@
 import prisma from "@repo/db/client";
 import { NextRequest, NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../../lib/auth";
 
 export async function GET(req: NextRequest) {
-  const user = Number(req.nextUrl.searchParams.get("userId"));
+  const session = await getServerSession(authOptions);
+  const user = Number(session?.user?.id);
+  
   if (!user)
     return NextResponse.json({ error: "Invalid User" }, { status: 400 });
 
@@ -12,5 +16,17 @@ export async function GET(req: NextRequest) {
     },
     orderBy:{timeStamp:"asc"}
   });
-  return NextResponse.json({data:transfer})
+  const totalSent = transfer
+    .filter((t) => t.fromUserId === user)
+    .reduce((sum, t) => sum + t.amount, 0);
+
+  const totalReceived = transfer
+    .filter((t) => t.toUserId === user)
+    .reduce((sum, t) => sum + t.amount, 0);
+    console.log(transfer);
+  return NextResponse.json({data:transfer,
+    user,
+    totalReceived,
+    totalSent
+  })
 }

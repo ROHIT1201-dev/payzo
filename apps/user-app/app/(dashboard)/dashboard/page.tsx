@@ -34,10 +34,12 @@ const expenseData = {
 
 export default async function () {
   const session = await getServerSession(authOptions);
-  const userId = session?.user?.number;
+  const userNumber = session?.user?.number;
+  const userId = Number(session?.user?.id);
   console.log(session?.user);
+  
 
-  const upiId = `${userId}@payzo`;
+  const upiId = `${userNumber}@payzo`;
   console.log(upiId);
   // NEW: Manage scanned value and whether scanner shows
 
@@ -50,7 +52,7 @@ export default async function () {
 
       <div className="flex gap-6">
         <main className="bg-white/95 border border-white/30 backdrop-blur-xl shadow-md rounded-2xl p-8 w-[53vw]">
-          <Graph dataRanges={expenseData} />
+          <Graph  userId={userId}/>
         </main>
 
         <div className="bg-white/95 border border-white/30 backdrop-blur-xl shadow-md rounded-2xl p-8 text-center mr-6">

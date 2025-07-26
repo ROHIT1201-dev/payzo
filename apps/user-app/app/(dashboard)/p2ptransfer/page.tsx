@@ -1,11 +1,9 @@
-
 import { getServerSession } from "next-auth";
 import prisma from "@repo/db/client";
 import { authOptions } from "../../lib/auth";
 import { P2PClientWrapper } from "../../../components/P2PClientWrapper";
 import { QrScanSection } from "../../../components/QrScanSection";
 import { TransactionWrapper } from "../../../components/TransactionWrapper";
-
 
 import {
   Activity,
@@ -15,8 +13,6 @@ import {
   TrendingDown,
   Clock,
 } from "lucide-react";
-
-
 
 async function getP2Ptransactions() {
   const session = await getServerSession(authOptions);
@@ -72,10 +68,25 @@ async function getP2Ptransactions() {
   };
 }
 
+
+function QrScanWrapper() {
+  const handleScanSuccess = (encodedValue: string) => {
+    try {
+      const decodedValue = decodeURIComponent(encodedValue);
+      console.log("QR Scan Success:", decodedValue);
+
+     
+    } catch (error) {
+      console.error("Error processing scanned value:", error);
+    }
+  };
+
+  return <QrScanSection onScanSuccess={handleScanSuccess} />;
+}
+
 export default async function P2PTransferPage() {
   const { transactions, sessionUserId } = await getP2Ptransactions();
 
-  
   const totalSent = transactions
     .filter((t) => t.fromUserId === sessionUserId)
     .reduce((sum, t) => sum + t.amount, 0);
@@ -86,7 +97,7 @@ export default async function P2PTransferPage() {
 
   return (
     <div className="w-screen">
-     
+
       <div className="shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-6 py-8">
           <div className="flex items-center justify-between">
@@ -113,9 +124,9 @@ export default async function P2PTransferPage() {
       </div>
 
       <div className="max-w-7xl mx-auto px-6 py-8 space-y-8">
-        
-        <div className="grid lg:grid-cols-2 gap-8">
        
+        <div className="grid lg:grid-cols-2 gap-8">
+          
           <div>
             <div className="bg-white rounded-2xl shadow-lg border border-gray-200/50 overflow-hidden group hover:shadow-xl transition-all duration-500">
               <div className="bg-gradient-to-r from-[#6a51a6] to-[#8b5cf6] p-6">
@@ -144,6 +155,7 @@ export default async function P2PTransferPage() {
           </div>
 
         
+          
           <div>
             <div className="bg-white rounded-2xl shadow-lg border border-gray-200/50 overflow-hidden group hover:shadow-xl transition-all duration-500">
               <div className="bg-gradient-to-r from-[#6a51a6] to-[#8b5cf6] p-6">
@@ -160,6 +172,7 @@ export default async function P2PTransferPage() {
                 </div>
               </div>
               <div className="p-6 flex justify-center">
+               
                 <QrScanSection />
               </div>
               <div className="px-6 pb-6">
@@ -184,7 +197,7 @@ export default async function P2PTransferPage() {
               </p>
             </div>
             <div className="grid md:grid-cols-3 gap-6">
-           
+             
               <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-200/50 hover:shadow-xl transition-all duration-300 group">
                 <div className="flex items-center justify-between mb-4">
                   <div className="w-12 h-12 bg-red-50 rounded-xl flex items-center justify-center group-hover:bg-red-100 transition-colors">
@@ -226,7 +239,7 @@ export default async function P2PTransferPage() {
                 <p className="text-xs text-gray-500 mt-2">Incoming transfers</p>
               </div>
 
-             
+            
               <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-200/50 hover:shadow-xl transition-all duration-300 group">
                 <div className="flex items-center justify-between mb-4">
                   <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center group-hover:bg-blue-100 transition-colors">
@@ -250,7 +263,6 @@ export default async function P2PTransferPage() {
           </div>
         )}
 
-        
         <div>
           <div className="flex items-center justify-between mb-6">
             <div>

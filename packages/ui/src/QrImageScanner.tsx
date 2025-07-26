@@ -13,44 +13,64 @@ export function QrImageScanner({
 }) {
   const [scanResult, setScanResult] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [isProcessing, setIsProcessing] = useState(false);
 
-  const handleFileUpload = async (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
+    setError(null);
+    setScanResult(null);
+    setIsProcessing(true);
+
     try {
-      const imageDataUrl = URL.createObjectURL(file);
-      const result = await QrScanner.scanImage(imageDataUrl, {
-        returnDetailedScanResult: true,
-      });
-      setScanResult(result.data);
-      onScan(result.data);
+     
+      if (!file.type.startsWith('image/')) {
+        throw new Error('Please select a valid image file.');
+      }
+
+   
+      const result = await QrScanner.scanImage(file);
+      setScanResult(result);
+      onScan(result);
     } catch (err: any) {
-      setError("No QR code found in image.");
+      console.error('QR Scan Error:', err);
+      setError("No QR code found in image or invalid image format.");
+    } finally {
+      setIsProcessing(false);
     }
   };
 
   return (
-    <div className="flex flex-col items-center p-4">
-      <div className="bg-yellow-500">
+    <div className="flex flex-col items-center p-4 space-y-4">
+      <div className=" relative bg-yellow-500 p-8 rounded-lg cursor-pointer hover:bg-yellow-400 transition-colors">
         <input
           type="file"
           accept="image/*"
           onChange={handleFileUpload}
-          className="mb-4 opacity-0 w-full h-full absolute"
+          className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+          disabled={isProcessing}
         />
-
-        <p>Click to upload</p>
+        <p className="text-center font-small">
+          {isProcessing ? "Processing..." : "Click to upload "}
+        </p>
       </div>
+
       {scanResult && (
-        <div className="text-green-600 font-semibold animate-bounce">
+        <div className="text-green-600 font-semibold text-wrap text-sm p-4 bg-green-50 rounded-lg">
           ✅ Scan Successful: {scanResult}
         </div>
       )}
-      {error && <div className="text-red-500">{error}</div>}
-      <Button onClick={onClose}>Close</Button>
+
+      {error && (
+        <div className="text-red-500 p-4 bg-red-50 rounded-lg">
+          ❌ {error}
+        </div>
+      )}
+
+      <Button onClick={onClose} variant="outline">
+        Close
+      </Button>
     </div>
   );
 }

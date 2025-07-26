@@ -15,8 +15,18 @@ import {
 } from "lucide-react";
 
 const QrImageScanner = dynamic(
-  () => import("@repo/ui/QrImageScanner").then((m) => m.QrImageScanner),
-  { ssr: false }
+  () => import("@repo/ui/QrImageScanner").then((mod) => ({
+    default: mod.QrImageScanner
+  })),
+  { 
+    ssr: false,
+    loading: () => (
+      <div className="text-center py-4 text-gray-500">
+        <Camera className="w-6 h-6 mx-auto mb-2 animate-pulse" />
+        Loading scanner...
+      </div>
+    )
+  }
 );
 
 interface QrResult {
@@ -25,7 +35,11 @@ interface QrResult {
   type: "url" | "text" | "phone" | "email" | "unknown";
 }
 
-export function QrScanSection() {
+type Props = {
+  onScanSuccess?: (encodedValue: string) => void; 
+};
+
+export function QrScanSection({ onScanSuccess }: Props) {
   const [showScanner, setShowScanner] = useState(false);
   const [scannedResult, setScannedResult] = useState<QrResult | null>(null);
   const [isScanning, setIsScanning] = useState(false);
@@ -34,7 +48,7 @@ export function QrScanSection() {
   const [scanHistory, setScanHistory] = useState<QrResult[]>([]);
   const router = useRouter();
 
-  // Detect QR content type
+  
   const detectQrType = useCallback((value: string): QrResult["type"] => {
     if (value.startsWith("http://") || value.startsWith("https://"))
       return "url";
@@ -44,11 +58,11 @@ export function QrScanSection() {
     return "text";
   }, []);
 
-  // Handle QR scan result
+
   const handleScanResult = useCallback(
     (value: string) => {
       try {
-        // Handle error cases
+       
         if (!value || value.trim().length === 0) {
           setError("Invalid QR code - no data found");
           setShowScanner(false);
@@ -63,22 +77,40 @@ export function QrScanSection() {
         };
 
         setScannedResult(result);
-        setScanHistory((prev) => [result, ...prev.slice(0, 4)]); // Keep last 5 scans
+        setScanHistory((prev) => [result, ...prev.slice(0, 4)]);
         setShowScanner(false);
         setError(null);
+        setIsScanning(false); 
 
-        // Navigate with the scanned value
-        router.push(`?number=${encodeURIComponent(result.value)}`);
+   
+        try {
+          if (typeof onScanSuccess === 'function') {
+            onScanSuccess(encodeURIComponent(result.value));
+          } else {
+           
+            console.log('QR Scan Success:', result.value);
+          }
+        } catch (callbackError) {
+          console.error('Error calling onScanSuccess:', callbackError);
+        }
+
+        
+        try {
+          router.push(`?number=${encodeURIComponent(result.value)}`);
+        } catch (navigationError) {
+          console.error('Navigation error:', navigationError);
+        }
       } catch (err) {
+        console.error("QR Processing Error:", err);
         setError("Failed to process QR code");
         setShowScanner(false);
         setIsScanning(false);
       }
     },
-    [detectQrType, router]
+    [detectQrType, router, onScanSuccess]
   );
 
-  // Copy to clipboard
+
   const copyToClipboard = useCallback(async () => {
     if (!scannedResult) return;
 
@@ -87,18 +119,18 @@ export function QrScanSection() {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
+      console.error("Copy failed:", err);
       setError("Failed to copy to clipboard");
     }
   }, [scannedResult]);
 
-  // Clear current scan
+ 
   const clearScan = useCallback(() => {
     setScannedResult(null);
     setError(null);
     setCopied(false);
   }, []);
 
-  
   const getDisplayText = useCallback((result: QrResult) => {
     switch (result.type) {
       case "url":
@@ -114,7 +146,6 @@ export function QrScanSection() {
     }
   }, []);
 
-
   const getTypeIcon = useCallback((type: QrResult["type"]) => {
     switch (type) {
       case "url":
@@ -128,7 +159,6 @@ export function QrScanSection() {
     }
   }, []);
 
-
   const getGradientClass = () => {
     return scannedResult
       ? "bg-gradient-to-r from-green-400 via-emerald-300 to-teal-400"
@@ -136,27 +166,13 @@ export function QrScanSection() {
   };
 
   return (
-    <div className="h-auto bg-white w-80 mt-3 rounded-xl shadow-lg overflow-hidden border border-gray-100">
-     
-      <div className="w-full bg-gradient-to-r from-purple-600 to-purple-700 h-16 flex justify-center items-center text-2xl font-bold text-white relative">
-        <Camera className="w-6 h-6 mr-2" />
-        QR Scanner
-        {scannedResult && (
-          <button
-            onClick={clearScan}
-            className="absolute right-4 p-1 hover:bg-white/20 rounded-full transition-colors"
-          >
-            <X className="w-5 h-5" />
-          </button>
-        )}
-      </div>
-
-      <div className="flex flex-col items-center px-6 py-6 gap-4">
-       
+    <div className="h-auto bg-white w-80 mt-3 rounded-xl shadow-lg w-full border border-gray-100 border-b-white">
+      <div className="flex  items-center px-6 py-6 gap-4 w-full ">
+        
         <div
-          className={`rounded-xl p-1 shadow-md transition-all duration-300 ${getGradientClass()}`}
+          className={`rounded-xl p-1 transition-all duration-300 ${getGradientClass()} my-12`}
         >
-          <div className="bg-white h-40 w-40 flex flex-col items-center justify-center rounded-lg p-3">
+          <div className="bg-white h-40 w-40 flex  items-center justify-center rounded-lg p-3">
             {error ? (
               <div className="text-center">
                 <AlertCircle className="w-8 h-8 text-red-500 mx-auto mb-2" />
@@ -188,7 +204,7 @@ export function QrScanSection() {
         </div>
 
         {/* Action Buttons */}
-        <div className="flex gap-2 w-full">
+        <div className="flex gap-1 w-full">
           <Button
             onClick={() => {
               setShowScanner(true);
@@ -205,33 +221,42 @@ export function QrScanSection() {
 
           {scannedResult && (
             <>
-              <Button 
-                variant="outline" 
-                size="sm" 
+              <Button
+                variant="outline"
+                size="sm"
                 onClick={copyToClipboard}
                 className="px-3"
+                title="Copy to clipboard"
               >
-                {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                {copied ? (
+                  <Check className="w-4 h-4 text-green-600" />
+                ) : (
+                  <Copy className="w-4 h-4" />
+                )}
               </Button>
-              <Button 
-                variant="ghost" 
+              <div className="flex">
+                <Button
+                variant="ghost"
                 size="sm"
                 onClick={clearScan}
                 className="px-3 text-gray-500 hover:text-red-500"
+                title="Clear scan"
               >
                 <X className="w-4 h-4" />
+
               </Button>
+              </div>
+              
             </>
           )}
         </div>
 
-        {/* Scanner Component - FIXED */}
+ 
         {showScanner && (
-          <div className="mt-2 w-full bg-gray-50 rounded-lg p-3">
+          <div className="w-full bg-gray-50 rounded-lg p-3">
             <QrImageScanner
               onScan={(val: string) => {
                 handleScanResult(val);
-                setIsScanning(false);
               }}
               onClose={() => {
                 setShowScanner(false);
@@ -241,18 +266,17 @@ export function QrScanSection() {
           </div>
         )}
 
-        {/* Success Feedback */}
+       
         {scannedResult && !error && (
-          <div className="flex items-center gap-2 text-green-600 font-semibold animate-fade-in">
+          <div className="flex items-center gap-1 text-green-600 font-semibold animate-fade-in ">
             <CheckCircle className="w-5 h-5" />
             <span>Scan Successful!</span>
             {copied && <span className="text-sm text-gray-500">(Copied!)</span>}
           </div>
         )}
 
-        {/* Recent Scans History */}
         {scanHistory.length > 1 && (
-          <div className="w-full mt-2">
+          <div className="w-full">
             <h4 className="text-sm font-semibold text-gray-600 mb-2">
               Recent Scans
             </h4>
@@ -262,6 +286,7 @@ export function QrScanSection() {
                   key={`${scan.timestamp.getTime()}-${index}`}
                   onClick={() => handleScanResult(scan.value)}
                   className="w-full text-left p-2 text-xs bg-gray-50 hover:bg-gray-100 rounded border transition-colors"
+                  title={`Rescan: ${scan.value}`}
                 >
                   <div className="flex items-center gap-2">
                     <span>{getTypeIcon(scan.type)}</span>

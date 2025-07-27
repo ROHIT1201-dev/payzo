@@ -43,7 +43,7 @@ export default async function () {
         
           <div className="relative inline-block mb-6">
             <div className="bg-white p-4 rounded-xl border-4 border-transparent bg-gradient-to-r from-white to-white bg-clip-padding border-gradient-to-r from-pink-400 via-teal-300 to-blue-400 shadow-xl  h-44 w-44">
-              <QrCode value={`http://localhost:3001//p2ptransfer?number=${userId}`} />
+              <QrCode value={`http://localhost:3001//p2ptransfer?number=${userNumber}`} />
             </div>
           </div>
 

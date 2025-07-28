@@ -33,7 +33,7 @@ export default async function () {
         <div>
           <Card title="Transactions">
             <div className="pt-2">
-              {transactions.map((t, index) => {
+              {transactions.map((t:any, index) => {
                 
                 let statusColor = "";
                 if (t.status === "Success") statusColor = "text-green-600";

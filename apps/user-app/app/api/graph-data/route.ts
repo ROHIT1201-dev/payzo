@@ -17,12 +17,12 @@ export async function GET(req: NextRequest) {
     orderBy:{timeStamp:"asc"}
   });
   const totalSent = transfer
-    .filter((t) => t.fromUserId === user)
-    .reduce((sum, t) => sum + t.amount, 0);
+    .filter((t:any) => t.fromUserId === user)
+    .reduce((sum:number, t:any) => sum + t.amount, 0);
 
   const totalReceived = transfer
-    .filter((t) => t.toUserId === user)
-    .reduce((sum, t) => sum + t.amount, 0);
+    .filter((t:any) => t.toUserId === user)
+    .reduce((sum:number, t:any) => sum + t.amount, 0);
     console.log(transfer);
   return NextResponse.json({data:transfer,
     user,

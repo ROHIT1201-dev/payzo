@@ -73,11 +73,11 @@ export default async function P2PTransferPage() {
 
   const totalSent = transactions
     .filter((t: any) => t.fromUserId === sessionUserId)
-    .reduce((sum, t: any) => sum + t.amount, 0);
+    .reduce((sum:number, t: any) => sum + t.amount, 0);
 
   const totalReceived = transactions
     .filter((t: any) => t.toUserId === sessionUserId)
-    .reduce((sum, t: any) => sum + t.amount, 0);
+    .reduce((sum:number, t: any) => sum + t.amount, 0);
 
   return (
     <div className="w-screen">

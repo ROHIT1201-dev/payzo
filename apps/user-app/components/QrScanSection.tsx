@@ -45,7 +45,7 @@ export function QrScanSection({ onScanSuccess }: Props) {
   const [isScanning, setIsScanning] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
-  const [scanHistory, setScanHistory] = useState<QrResult[]>([]);
+
   const router = useRouter();
 
   
@@ -77,7 +77,7 @@ export function QrScanSection({ onScanSuccess }: Props) {
         };
 
         setScannedResult(result);
-        setScanHistory((prev) => [result, ...prev.slice(0, 4)]);
+      
         setShowScanner(false);
         setError(null);
         setIsScanning(false); 
@@ -167,7 +167,7 @@ export function QrScanSection({ onScanSuccess }: Props) {
 
   return (
     <div className="h-auto bg-white w-80 mt-3 rounded-xl shadow-lg w-full border border-gray-100 border-b-white">
-      <div className="flex  items-center px-6 py-6 gap-4 w-full ">
+      <div className="flex  items-center px-6 py-6 gap-2 w-full ">
         
         <div
           className={`rounded-xl p-1 transition-all duration-300 ${getGradientClass()} my-12`}
@@ -275,30 +275,7 @@ export function QrScanSection({ onScanSuccess }: Props) {
           </div>
         )}
 
-        {scanHistory.length > 1 && (
-          <div className="w-full">
-            <h4 className="text-sm font-semibold text-gray-600 mb-2">
-              Recent Scans
-            </h4>
-            <div className="space-y-1 max-h-32 overflow-y-auto">
-              {scanHistory.slice(1, 4).map((scan, index) => (
-                <button
-                  key={`${scan.timestamp.getTime()}-${index}`}
-                  onClick={() => handleScanResult(scan.value)}
-                  className="w-full text-left p-2 text-xs bg-gray-50 hover:bg-gray-100 rounded border transition-colors"
-                  title={`Rescan: ${scan.value}`}
-                >
-                  <div className="flex items-center gap-2">
-                    <span>{getTypeIcon(scan.type)}</span>
-                    <span className="truncate flex-1">
-                      {getDisplayText(scan)}
-                    </span>
-                  </div>
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
+        
       </div>
     </div>
   );

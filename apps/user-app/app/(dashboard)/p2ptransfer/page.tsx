@@ -49,7 +49,7 @@ async function getP2Ptransactions() {
 
   return {
     sessionUserId: userId,
-    transactions: txns.map((t:any) => ({
+    transactions: txns.map((t: any) => ({
       amount: t.amount,
       time: t.timeStamp.toISOString(),
       fromUserId: t.fromUserId,
@@ -68,36 +68,19 @@ async function getP2Ptransactions() {
   };
 }
 
-
-function QrScanWrapper() {
-  const handleScanSuccess = (encodedValue: string) => {
-    try {
-      const decodedValue = decodeURIComponent(encodedValue);
-      console.log("QR Scan Success:", decodedValue);
-
-     
-    } catch (error) {
-      console.error("Error processing scanned value:", error);
-    }
-  };
-
-  return <QrScanSection onScanSuccess={handleScanSuccess} />;
-}
-
 export default async function P2PTransferPage() {
   const { transactions, sessionUserId } = await getP2Ptransactions();
 
   const totalSent = transactions
-    .filter((t) => t.fromUserId === sessionUserId)
-    .reduce((sum, t) => sum + t.amount, 0);
+    .filter((t: any) => t.fromUserId === sessionUserId)
+    .reduce((sum, t: any) => sum + t.amount, 0);
 
   const totalReceived = transactions
-    .filter((t) => t.toUserId === sessionUserId)
-    .reduce((sum, t) => sum + t.amount, 0);
+    .filter((t: any) => t.toUserId === sessionUserId)
+    .reduce((sum, t: any) => sum + t.amount, 0);
 
   return (
     <div className="w-screen">
-
       <div className="shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-6 py-8">
           <div className="flex items-center justify-between">
@@ -124,9 +107,7 @@ export default async function P2PTransferPage() {
       </div>
 
       <div className="max-w-7xl mx-auto px-6 py-8 space-y-8">
-       
         <div className="grid lg:grid-cols-2 gap-8">
-          
           <div>
             <div className="bg-white rounded-2xl shadow-lg border border-gray-200/50 overflow-hidden group hover:shadow-xl transition-all duration-500">
               <div className="bg-gradient-to-r from-[#6a51a6] to-[#8b5cf6] p-6">
@@ -154,8 +135,6 @@ export default async function P2PTransferPage() {
             </div>
           </div>
 
-        
-          
           <div>
             <div className="bg-white rounded-2xl shadow-lg border border-gray-200/50 overflow-hidden group hover:shadow-xl transition-all duration-500">
               <div className="bg-gradient-to-r from-[#6a51a6] to-[#8b5cf6] p-6">
@@ -172,8 +151,17 @@ export default async function P2PTransferPage() {
                 </div>
               </div>
               <div className="p-6 flex justify-center">
-               
-                <QrScanSection />
+                <QrScanSection
+                  onScanSuccess={(encodedValue: string) => {
+                    try {
+                      const decodedValue = decodeURIComponent(encodedValue);
+                      console.log("QR Scan Success:", decodedValue);
+                      // Add your QR scan logic here
+                    } catch (error) {
+                      console.error("Error processing scanned value:", error);
+                    }
+                  }}
+                />
               </div>
               <div className="px-6 pb-6">
                 <div className="flex items-center text-sm text-gray-500">
@@ -185,7 +173,6 @@ export default async function P2PTransferPage() {
           </div>
         </div>
 
-        
         {transactions.length > 0 && (
           <div>
             <div className="mb-6">
@@ -197,7 +184,6 @@ export default async function P2PTransferPage() {
               </p>
             </div>
             <div className="grid md:grid-cols-3 gap-6">
-             
               <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-200/50 hover:shadow-xl transition-all duration-300 group">
                 <div className="flex items-center justify-between mb-4">
                   <div className="w-12 h-12 bg-red-50 rounded-xl flex items-center justify-center group-hover:bg-red-100 transition-colors">
@@ -218,7 +204,6 @@ export default async function P2PTransferPage() {
                 <p className="text-xs text-gray-500 mt-2">Outgoing transfers</p>
               </div>
 
-             
               <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-200/50 hover:shadow-xl transition-all duration-300 group">
                 <div className="flex items-center justify-between mb-4">
                   <div className="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center group-hover:bg-green-100 transition-colors">
@@ -239,7 +224,6 @@ export default async function P2PTransferPage() {
                 <p className="text-xs text-gray-500 mt-2">Incoming transfers</p>
               </div>
 
-            
               <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-200/50 hover:shadow-xl transition-all duration-300 group">
                 <div className="flex items-center justify-between mb-4">
                   <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center group-hover:bg-blue-100 transition-colors">

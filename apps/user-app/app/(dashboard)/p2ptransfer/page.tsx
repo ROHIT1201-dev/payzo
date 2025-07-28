@@ -49,7 +49,7 @@ async function getP2Ptransactions() {
 
   return {
     sessionUserId: userId,
-    transactions: txns.map((t) => ({
+    transactions: txns.map((t:any) => ({
       amount: t.amount,
       time: t.timeStamp.toISOString(),
       fromUserId: t.fromUserId,

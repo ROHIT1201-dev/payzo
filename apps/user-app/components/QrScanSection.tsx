@@ -84,12 +84,10 @@ export function QrScanSection({ onScanSuccess }: Props) {
 
    
         try {
-          if (typeof onScanSuccess === 'function') {
-            onScanSuccess(encodeURIComponent(result.value));
-          } else {
+        
            
             console.log('QR Scan Success:', result.value);
-          }
+         
         } catch (callbackError) {
           console.error('Error calling onScanSuccess:', callbackError);
         }

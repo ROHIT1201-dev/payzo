@@ -152,15 +152,7 @@ export default async function P2PTransferPage() {
               </div>
               <div className="p-6 flex justify-center">
                 <QrScanSection
-                  onScanSuccess={(encodedValue: string) => {
-                    try {
-                      const decodedValue = decodeURIComponent(encodedValue);
-                      console.log("QR Scan Success:", decodedValue);
-                      // Add your QR scan logic here
-                    } catch (error) {
-                      console.error("Error processing scanned value:", error);
-                    }
-                  }}
+                  
                 />
               </div>
               <div className="px-6 pb-6">

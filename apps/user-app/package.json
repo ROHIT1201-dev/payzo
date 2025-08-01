@@ -7,12 +7,11 @@
   },
   "scripts": {
     "dev": "next dev --port 3001",
-   
     "start": "next start",
     "lint": "eslint . --max-warnings 0",
     "prisma:generate": "prisma generate --schema=../../packages/db/prisma/schema.prisma",
-  "build": "prisma generate --schema=../../packages/db/prisma/schema.prisma && next build",
-  "postinstall": "prisma generate --schema=../../packages/db/prisma/schema.prisma"
+    "build": "prisma generate --schema=../../packages/db/prisma/schema.prisma && next build",
+    "postinstall": "prisma generate --schema=../../packages/db/prisma/schema.prisma"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.8.2",
@@ -29,7 +28,8 @@
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-redux": "^9.2.0",
-    "recoil": "^0.7.7"
+    "recoil": "^0.7.7",
+    "twilio": "^5.8.0"
   },
   "devDependencies": {
     "@next/eslint-plugin-next": "^14.1.1",

@@ -12,12 +12,15 @@ export async function createOnRampTransaction(
   const token = (Math.random()*1000).toString();
 
   const userId = session.user.id;
+  console.log(userId)
 
   if (!userId) {
     return {
       message: "User not loggin in",
     };
   }
+
+  
   await prisma.onRampTransaction.create({
     data: {
       userId: Number(userId),

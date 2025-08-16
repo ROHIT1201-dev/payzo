@@ -21,7 +21,7 @@ export async function createOnRampTransaction(
   }
 
   
-  await prisma.onRampTransaction.create({
+  const transaction = await prisma.onRampTransaction.create({
     data: {
       userId: Number(userId),
       status: "Processing",
@@ -33,5 +33,7 @@ export async function createOnRampTransaction(
   });
   return {
     message: "On ramp transaction added",
+    token,
+    id:transaction.id,
   };
 }

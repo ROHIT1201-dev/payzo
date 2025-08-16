@@ -6,6 +6,7 @@ import { Select } from "@repo/ui/Select";
 import { useState } from "react";
 import { TextInput } from "@repo/ui/TextInput";
 import { createOnRampTransaction } from "../app/lib/actions/createOnRamptxn";
+import axios from "axios";
 
 const SUPPORTED_BANKS = [
   {
@@ -23,11 +24,28 @@ export const AddMoney = () => {
     SUPPORTED_BANKS[0]?.redirectUrl
   );
 
-
-
-  
   const [amount, setAmount] = useState(0);
   const [provider, setProvider] = useState(SUPPORTED_BANKS[0]?.name || "");
+
+  const handleStatus = async (token: any, transactionId: any, amount: any) => {
+    console.log("request arrived");
+    console.log("Token:", token);
+    console.log("Transaction ID:", transactionId);
+    console.log("Amount:", amount);
+    // Handle status updates here
+    try {
+      const res=await axios.post("https://payzo-bank-webhook.onrender.com/hdfcWebhook", {
+        token: token,
+        user_identifier: transactionId,
+        amount: amount,
+      });
+      console.log(res.data);
+
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <Card title="Add Money">
       <div className="w-full">
@@ -56,9 +74,15 @@ export const AddMoney = () => {
         <div className="flex justify-center pt-4 ">
           <Button
             onClick={async () => {
-              await createOnRampTransaction(amount*100, provider);
-              window.location.href = redirectUrl || "";
-            }}  
+              const res = await createOnRampTransaction(amount * 100, provider);
+
+              console.log(res.token);
+              const token = res.token;
+              const transactionId = res.id;
+              handleStatus(token, transactionId,amount);
+              // window.location.href = redirectUrl || "";
+
+            }}
           >
             Add Money
           </Button>

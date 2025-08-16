@@ -4,7 +4,6 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-   
     "dev": "nodemon --watch src --exec \"npm run build && npm start\"",
     "prisma:generate": "prisma generate --schema=../../packages/db/prisma/schema.prisma",
     "build": "npm run prisma:generate && npx esbuild ./src/index.ts --bundle --platform=node --outfile=dist/index.js",
@@ -17,10 +16,12 @@
   "dependencies": {
     "@repo/db": "*",
     "@types/express": "^5.0.3",
+    "cors": "^2.8.5",
     "esbuild": "^0.25.6",
     "express": "^5.1.0"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.19",
     "nodemon": "^3.1.10"
   }
 }

@@ -87,7 +87,7 @@ export default function SignInPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-neutral-900">
+    <div className="h-[92vh] flex items-center justify-center bg-neutral-900">
       <form
         onSubmit={handleSubmit}
         className="bg-neutral-800 p-8 rounded-lg shadow-lg w-full max-w-sm"

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { Button } from "@repo/ui/button";
 import { useRouter } from "next/navigation";
@@ -16,17 +16,18 @@ import {
 import { get } from "http";
 
 const QrImageScanner = dynamic(
-  () => import("@repo/ui/QrImageScanner").then((mod) => ({
-    default: mod.QrImageScanner
-  })),
-  { 
+  () =>
+    import("@repo/ui/QrImageScanner").then((mod) => ({
+      default: mod.QrImageScanner,
+    })),
+  {
     ssr: false,
     loading: () => (
       <div className="text-center py-4 text-gray-500">
         <Camera className="w-6 h-6 mx-auto mb-2 animate-pulse" />
         Loading scanner...
       </div>
-    )
+    ),
   }
 );
 
@@ -37,7 +38,7 @@ interface QrResult {
 }
 
 type Props = {
-  onScanSuccess?: (encodedValue: string) => void; 
+  onScanSuccess?: (encodedValue: string) => void;
 };
 
 export function QrScanSection({ onScanSuccess }: Props) {
@@ -49,7 +50,6 @@ export function QrScanSection({ onScanSuccess }: Props) {
 
   const router = useRouter();
 
-  
   const detectQrType = useCallback((value: string): QrResult["type"] => {
     if (value.startsWith("http://") || value.startsWith("https://"))
       return "url";
@@ -59,11 +59,9 @@ export function QrScanSection({ onScanSuccess }: Props) {
     return "text";
   }, []);
 
-
   const handleScanResult = useCallback(
     (value: string) => {
       try {
-       
         if (!value || value.trim().length === 0) {
           setError("Invalid QR code - no data found");
           setShowScanner(false);
@@ -78,23 +76,16 @@ export function QrScanSection({ onScanSuccess }: Props) {
         };
 
         setScannedResult(result);
-      
+
         setShowScanner(false);
         setError(null);
-        setIsScanning(false); 
+        setIsScanning(false);
 
-   
         try {
-        
-           
-            console.log('QR Scan Success:', result.value);
-         
+          console.log("QR Scan Success:", result.value);
         } catch (callbackError) {
-          console.error('Error calling onScanSuccess:', callbackError);
+          console.error("Error calling onScanSuccess:", callbackError);
         }
-
-        
-        
       } catch (err) {
         console.error("QR Processing Error:", err);
         setError("Failed to process QR code");
@@ -104,7 +95,6 @@ export function QrScanSection({ onScanSuccess }: Props) {
     },
     [detectQrType, router, onScanSuccess]
   );
-
 
   const copyToClipboard = useCallback(async () => {
     if (!scannedResult) return;
@@ -119,33 +109,41 @@ export function QrScanSection({ onScanSuccess }: Props) {
     }
   }, [scannedResult]);
 
- 
   const clearScan = useCallback(() => {
     setScannedResult(null);
     setError(null);
     setCopied(false);
   }, []);
 
-  const getDisplayText = useCallback((result: QrResult) => {
+  const getDisplayText = useCallback((result: QrResult): string => {
     switch (result.type) {
-      case "url":
-        localStorage.setItem("result",result.value)
-        window.dispatchEvent(new Event("storage"))
-       result.value.length > 50
+      case "url": {
+        localStorage.setItem("result", result.value);
+        window.dispatchEvent(new Event("storage"));
+        return result.value.length > 50
           ? `${result.value.substring(0, 47)}...`
           : result.value;
-      case "phone":
-        localStorage.setItem("result",result.value)
-        window.dispatchEvent(new Event("storage"))
-       result.value.replace("tel:", "");
-      default:
-        localStorage.setItem("result",result.value)
-        window.dispatchEvent(new Event("storage"))
-       result.value.length > 60
+      }
+      case "phone": {
+        localStorage.setItem("result", result.value);
+        window.dispatchEvent(new Event("storage"));
+        return result.value.replace("tel:", "");
+      }
+      default: {
+        localStorage.setItem("result", result.value);
+        window.dispatchEvent(new Event("storage"));
+        return result.value.length > 60
           ? `${result.value.substring(0, 57)}...`
           : result.value;
+      }
     }
   }, []);
+
+  useEffect(() => {
+    if (scannedResult) {
+      getDisplayText(scannedResult); 
+    }
+  }, [scannedResult, getDisplayText]);
 
   const getTypeIcon = useCallback((type: QrResult["type"]) => {
     switch (type) {
@@ -200,7 +198,6 @@ export function QrScanSection({ onScanSuccess }: Props) {
                     />
                   </svg>
                   <span className="text-xs font-medium leading-tight">
-                    {getDisplayText(scannedResult )}
                     Done:✨
                   </span>
                 </div>

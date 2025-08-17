@@ -9,7 +9,7 @@ export const TextInput = ({
     placeholder: string;
     onChange: (value: string) => void;
     label: string;
-    value?:string;
+    value?:number;
 }) => {
     return <div className="pt-2">
         <label className="block mb-2 text-sm font-medium text-gray-900">{label}</label>

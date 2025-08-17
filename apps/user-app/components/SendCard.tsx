@@ -42,7 +42,7 @@ export function SendCard({ upiNumber }: { upiNumber?: string }) {
           <TextInput
             placeholder={"Number"}
             label="Number"
-            value={Number(number)}
+            value={number}
             onChange={(value) => {
               setNumber(value);
               setToNumber(value);
@@ -51,7 +51,7 @@ export function SendCard({ upiNumber }: { upiNumber?: string }) {
           <TextInput
             placeholder={"Amount"}
             label="Amount"
-            value={Number(amount)}
+            value={amount}
             onChange={(value) => {
               setAmount(value);
             }}

@@ -37,7 +37,7 @@ export const AddMoney = () => {
       const res=await axios.post("https://payzo-bank-webhook.onrender.com/hdfcWebhook", {
         token: token,
         user_identifier: transactionId,
-        amount: amount,
+        amount: amount*100,
       });
       console.log(res.data);
 

@@ -17,6 +17,7 @@ import {
 async function getP2Ptransactions() {
   const session = await getServerSession(authOptions);
   const userId = Number(session?.user?.id);
+  
 
   const txns = await prisma.p2pTransfer.findMany({
     where: {
@@ -70,7 +71,7 @@ async function getP2Ptransactions() {
 
 export default async function P2PTransferPage() {
   const { transactions, sessionUserId } = await getP2Ptransactions();
-
+  
   const totalSent = transactions
     .filter((t: any) => t.fromUserId === sessionUserId)
     .reduce((sum:number, t: any) => sum + t.amount, 0);

@@ -3,11 +3,15 @@
 import { useSearchParams } from "next/navigation"
 import { SendCard } from "./SendCard";
 import { useState } from "react";
+import { QrScanSection } from "./QrScanSection";
 
 export function P2PClientWrapper(){
-    const searchParams = useSearchParams();
-    const number = searchParams.get("number") || undefined;
+    // const searchParams = useSearchParams();
+    // const number = searchParams.get("number") || undefined;
+
     
 
-    return <SendCard upiNumber={number}/>
+    
+
+    return <SendCard />
 }

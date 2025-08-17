@@ -9,12 +9,31 @@ export function SendCard({ upiNumber }: { upiNumber?: string }) {
   const [number, setNumber] = useState("");
   const [amount, setAmount] = useState("");
   const [toNumber, setToNumber] = useState("");
+  const[url,setUrl] = useState("")
 
   useEffect(() => {
     if (upiNumber) {
       setToNumber(upiNumber);
     }
   }, [upiNumber]);
+
+  useEffect(()=>{
+    const handler = () =>{
+      const value=localStorage.getItem("result")?.split("=")[1] || "";
+      setUrl(value)
+      setNumber(value)
+      console.log(localStorage.getItem("result"));
+    }
+    window.addEventListener("storage",handler)
+    handler()
+    return () => {
+      window.removeEventListener("storage", handler);
+    };
+  },[])
+
+
+
+  
 
   return (
     <div className="h-[43vh] flex justify-center mt-3">
@@ -23,6 +42,7 @@ export function SendCard({ upiNumber }: { upiNumber?: string }) {
           <TextInput
             placeholder={"Number"}
             label="Number"
+            value={number}
             onChange={(value) => {
               setNumber(value);
               setToNumber(value);
@@ -31,6 +51,7 @@ export function SendCard({ upiNumber }: { upiNumber?: string }) {
           <TextInput
             placeholder={"Amount"}
             label="Amount"
+            value={amount}
             onChange={(value) => {
               setAmount(value);
             }}
@@ -39,6 +60,7 @@ export function SendCard({ upiNumber }: { upiNumber?: string }) {
             <Button
               onClick={async () => {
                 await p2pTransfer(number, Number(amount) * 100);
+                
               }}
             >
               Send

@@ -60,7 +60,13 @@ export function SendCard({ upiNumber }: { upiNumber?: string }) {
             <Button
               onClick={async () => {
                 await p2pTransfer(number, Number(amount) * 100);
-                
+              localStorage.removeItem("result"); // 👈 clear stored value
+              setNumber("");
+              setToNumber("");
+              setAmount("");
+
+              // refresh if you still want
+              window.location.reload();
               }}
             >
               Send

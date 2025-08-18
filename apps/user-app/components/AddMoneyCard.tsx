@@ -52,7 +52,7 @@ export const AddMoney = () => {
         <TextInput
           label={"Amount"}
           placeholder={"Amount"}
-          value={Number(amount)}
+          value={String(amount)}
           onChange={(value) => {
             setAmount(Number(value));
           }}

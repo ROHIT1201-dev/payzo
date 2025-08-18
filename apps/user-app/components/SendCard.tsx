@@ -60,6 +60,7 @@ export function SendCard({ upiNumber }: { upiNumber?: string }) {
             <Button
               onClick={async () => {
                 await p2pTransfer(number, Number(amount) * 100);
+                console.log("aj dalal");
               localStorage.removeItem("result"); // 👈 clear stored value
               setNumber("");
               setToNumber("");
@@ -67,6 +68,7 @@ export function SendCard({ upiNumber }: { upiNumber?: string }) {
 
               // refresh if you still want
               window.location.reload();
+
               }}
             >
               Send

@@ -5,6 +5,7 @@ import prisma from "@repo/db/client";
 import { timeStamp } from "console";
 
 export async function p2pTransfer(to: string, amount: number) {
+  console.log("hulullulu");
   const session = await getServerSession(authOptions);
   const userId = session?.user?.id;
   console.log("userid", userId);
@@ -20,8 +21,16 @@ export async function p2pTransfer(to: string, amount: number) {
   });
   console.log("to user", toUser);
   if (!toUser) {
+    console.log("User not found");
     return {
       message: "User not found",
+    };
+  }
+
+  if (amount <= 0 || amount==null) {
+    console.log("Enter valid amount");
+    return {
+      message: "Enter valid amount",
     };
   }
   await prisma.$transaction(async (tx:any) => {
